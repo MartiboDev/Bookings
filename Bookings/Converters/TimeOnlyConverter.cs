@@ -9,14 +9,12 @@ namespace Bookings.Converters
 
         public override TimeOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            try
+            var timeString = reader.GetString();
+            if (TimeOnly.TryParseExact(timeString, TimeFormat, out var time))
             {
-                return TimeOnly.ParseExact(reader.GetString()!, TimeFormat);
+                return time;
             }
-            catch (Exception e)
-            {
-                throw new JsonException("Invalid time format (HH:mm).", e);
-            }
+            throw new JsonException($"Invalid time format ({TimeFormat}).");
         }
 
         public override void Write(Utf8JsonWriter writer, TimeOnly value, JsonSerializerOptions options)

@@ -5,31 +5,32 @@ namespace Bookings.Utils
 {
     public static class BookingValidator
     {
+        /// <summary>
+        /// Checks whether or not a booking time is within business hours
+        /// </summary>
+        /// <param name="bookingTime">Booking time</param>
+        /// <returns>If a time is within business hours</returns>
         public static bool IsWithinBusinessHours(TimeOnly bookingTime)
         {
-            var openingHours = new TimeOnly(9, 0);
-            var closingHours = new TimeOnly(17, 0);
-            return bookingTime >= openingHours && bookingTime <= closingHours.AddHours(-1);
+            return bookingTime >= BookingConstants.OpeningTime && bookingTime <= BookingConstants.ClosingTime.AddHours(-1);
         }
 
+        /// <summary>
+        /// Determines if there is a booking conflict with other bookings
+        /// </summary>
+        /// <param name="bookings">A list of bookings</param>
+        /// <param name="bookingTime">Booking time</param>
+        /// <returns>If a conflict exists</returns>
         public static bool HasBookingConflict(IEnumerable<Booking> bookings, TimeOnly bookingTime)
         {
-            var settlementsCount = 0;
-            foreach (var booking in bookings)
+            var overlappingBookings = bookings.Count(booking =>
             {
-                var endBookingTime = booking.Time.AddMinutes(59);
-                if (bookingTime >= booking.Time && bookingTime <= endBookingTime)
-                {
-                    settlementsCount++;
-                }
+                var endBookingTime = booking.Time.AddMinutes(60);
+                var newBookingEndTime = bookingTime.AddMinutes(60);
+                return (bookingTime < endBookingTime && newBookingEndTime > booking.Time);
+            });
 
-                if (settlementsCount >= BookingConstants.MaxSimultaneousSettlements)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return overlappingBookings >= BookingConstants.MaxSimultaneousSettlements;
         }
     }
 }
