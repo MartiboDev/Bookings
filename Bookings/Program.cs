@@ -1,4 +1,4 @@
-using InfoTrackBookings.Extensions;
+using Bookings.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

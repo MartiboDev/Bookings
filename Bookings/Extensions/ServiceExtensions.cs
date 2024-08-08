@@ -1,8 +1,4 @@
-﻿using InfoTrackBookings.Repositories;
-using InfoTrackBookings.Services;
-using InfoTrackBookings.Store;
-
-namespace InfoTrackBookings.Extensions
+﻿namespace Bookings.Extensions
 {
     public static class ServiceExtensions
     {
@@ -20,8 +16,6 @@ namespace InfoTrackBookings.Extensions
 
         private static IServiceCollection AddBookingServices(this IServiceCollection services)
         {
-            services.AddSingleton<BookingStore>();
-
             return services;
         }
     }
