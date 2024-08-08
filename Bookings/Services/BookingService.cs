@@ -16,8 +16,6 @@ namespace Bookings.Services
 
         public async Task<Booking> CreateBookingAsync(BookingModel bookingModel)
         {
-            // Invalid data check ??? BadRequest
-
             // Checks to see if the booking time is within business hours
             if (!BookingValidator.IsWithinBusinessHours(bookingModel.BookingTime))
             {
@@ -35,7 +33,7 @@ namespace Bookings.Services
             // Create a new Booking object
             var booking = new Booking
             {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 Time = bookingModel.BookingTime,
                 Name = bookingModel.Name
             };

@@ -21,11 +21,12 @@ namespace Bookings.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBooking([FromBody] BookingModel bookingModel)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
             try
             {
                 var booking = await _bookingService.CreateBookingAsync(bookingModel);
                 return Ok(new { bookingId = booking.Id });
-
             }
             catch (BookingConflictException ex)
             {
@@ -36,6 +37,11 @@ namespace Bookings.Controllers
             {
                 _logger.LogError(ex, "Error creating booking");
                 return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error: {Message}", ex.Message);
+                return StatusCode(500, new { error = "An unexpected error occurred. Please try again later." });
             }
         }
     }

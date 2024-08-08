@@ -23,7 +23,7 @@ namespace Bookings.Utils
                     settlementsCount++;
                 }
 
-                if (BookingConstants.MaxSimultaneousSettlements >= 4)
+                if (settlementsCount >= BookingConstants.MaxSimultaneousSettlements)
                 {
                     return true;
                 }
